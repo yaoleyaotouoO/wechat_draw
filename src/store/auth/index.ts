@@ -7,14 +7,14 @@ export default class AuthStore {
 
     @action.bound
     addUserInfo(query: IAddUserInfoQuery) {
-        this.api().addUserInfo(query);
+        return this.api().addUserInfo(query);
     }
 
     api() {
         return {
-            addUserInfo: (query: IAddUserInfoQuery) => {
-                return post(``, query);
+            addUserInfo: (query: IAddUserInfoQuery): Promise<number> => {
+                return post(`/api/addUserInfo`, query);
             }
-        }
+        };
     }
 }

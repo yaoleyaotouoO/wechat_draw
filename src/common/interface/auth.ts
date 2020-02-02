@@ -4,6 +4,7 @@ export interface IAddUserInfoQuery {
 }
 
 export interface IWeappUserInfo {
+    id: number;
     nickName: string;
     gender: number;
     language: string;

@@ -3,7 +3,7 @@ import { View, Button } from '@tarojs/components';
 import { observer, inject } from '@tarojs/mobx';
 import { Store } from '@store/index';
 import EntryStore from '@store/entry';
-import { AtButton, AtModal, AtInput, AtModalHeader, AtModalContent, AtModalAction } from 'taro-ui';
+import { AtButton, AtModal, AtInput, AtModalHeader, AtModalContent, AtModalAction, AtMessage } from 'taro-ui';
 
 import './index.scss';
 
@@ -31,8 +31,6 @@ export default class Entry extends Component<IEntryProps, IEntryState> {
       openModal: true,
       isCreateRoom: true
     });
-
-
   }
 
   handlerFindRoom = () => {
@@ -40,25 +38,52 @@ export default class Entry extends Component<IEntryProps, IEntryState> {
       openModal: true,
       isCreateRoom: false
     });
-
-
   }
 
-  handlerOpenModal = () => {
+  handlerConfirm = async () => {
+    const { roomName, isCreateRoom } = this.state;
+    const { entryStore: { createRoom, findRoom } } = this.props;
+
     this.setState({
       openModal: false,
       roomName: ''
     });
 
-    Taro.navigateTo({ url: '/pages/game/index' });
+
+    const { nickName } = Taro.getStorageSync('userInfo');
+    let roomId = '';
+    if (isCreateRoom) {
+      const rawData = await createRoom({ roomName, nickName });
+      if (rawData.errMsg) {
+        Taro.atMessage({
+          message: rawData.errMsg,
+          type: 'error'
+        });
+        return;
+      }
+      roomId = rawData.data;
+    } else {
+      const rawData = await findRoom({ roomName, nickName });
+      if (rawData.errMsg) {
+        Taro.atMessage({
+          message: rawData.errMsg,
+          type: 'error'
+        });
+        return;
+      }
+
+      roomId = rawData.data;
+    }
+
+    Taro.navigateTo({ url: `/pages/game/index?roomId=${roomId}` });
   }
 
   render() {
     const { roomName, openModal, isCreateRoom } = this.state;
-    // const { entryStore: { text } } = this.props;
 
     return (
       <View className='entry-page'>
+        <AtMessage />
         <View className='entry-content'>
           <AtButton
             type='primary'
@@ -88,7 +113,7 @@ export default class Entry extends Component<IEntryProps, IEntryState> {
             </AtModalContent>
             <AtModalAction>
               <Button onClick={() => this.setState({ openModal: false })}>取消</Button>
-              <Button onClick={this.handlerOpenModal}>确定</Button>
+              <Button onClick={this.handlerConfirm}>确定</Button>
             </AtModalAction>
           </AtModal>
         </View>

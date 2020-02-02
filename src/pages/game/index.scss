@@ -2,6 +2,29 @@
     width : 100%;
     height: 100%;
 
+    .game-answer {
+        height: 10%;
+    }
+
+    .at-button {
+        width: 200px;
+    }
+
+    .at-button--primary {
+        color     : #FFD433;
+        border    : 1PX solid #FFD433;
+        background: #fff;
+    }
+
+    .at-row .at-col {
+        text-align: center;
+    }
+
+    .at-badge__num {
+        top  : 60rpx;
+        right: 5PX;
+    }
+
     .game-head {
         height          : 5%;
         background-color: #F7CE56;
@@ -104,6 +127,11 @@
     .game-toolbar {
         height          : 5%;
         background-color: #F9E5BB;
+
+        .at-button {
+            line-height: normal;
+            height     : 100%;
+        }
     }
 
     .game-bottom {
@@ -114,8 +142,7 @@
             height: 100%;
         }
 
-        &-left {
-            height        : 100%;
+        &-people {
             display       : flex;
             flex-direction: column;
             align-items   : center;
@@ -130,14 +157,26 @@
             }
         }
 
+        &-left {
+            height        : 100%;
+            display       : flex;
+            flex-direction: column;
+            align-items   : center;
+        }
+
         &-mid {
-            height : 100%;
-            padding: 20px 0;
+            height    : 100%;
+            padding   : 20px 0;
+            text-align: left !important;
 
             .body {
                 height          : 100%;
                 border-radius   : 20px;
                 background-color: #fff;
+            }
+
+            .body-message {
+                padding-left: 20px;
             }
         }
 
@@ -156,28 +195,5 @@
                 height   : 25px;
             }
         }
-    }
-
-    .game-answer {
-        height: 10%;
-    }
-
-    .at-button {
-        width: 200px;
-    }
-
-    .at-button--primary {
-        color     : #FFD433;
-        border    : 1PX solid #FFD433;
-        background: #fff;
-    }
-
-    .at-row .at-col {
-        text-align: center;
-    }
-
-    .at-badge__num {
-        top  : 60rpx;
-        right: 5PX;
     }
 }

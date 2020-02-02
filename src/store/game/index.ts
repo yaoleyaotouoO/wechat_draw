@@ -1,5 +1,12 @@
-import { observable } from 'mobx';
+import { action } from 'mobx';
+import Socket from '@store/common/socket';
 
 export default class GameStore {
-    @observable text = 'test';
+    socket: Socket;
+
+    @action.bound
+    initSocket() {
+        this.socket = new Socket();
+        return this.socket.init();
+    }
 }

@@ -25,9 +25,9 @@ class App extends Component {
    */
   config: Config = {
     pages: [
-      'pages/game/index',
-      'pages/auth/index',
       'pages/entry/index',
+      'pages/auth/index',
+      'pages/game/index',
     ],
     window: {
       backgroundTextStyle: 'light',

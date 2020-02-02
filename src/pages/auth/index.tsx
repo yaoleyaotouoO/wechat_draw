@@ -17,17 +17,17 @@ export default class Auth extends Component<IAuthProps, IAuthState> {
     navigationBarTitleText: '你画我猜精简版'
   }
 
-  handlerGetUserInfo = ev => {
+  handlerGetUserInfo = async ev => {
     const { authStore: { addUserInfo } } = this.props;
 
     const userInfo: IWeappUserInfo = ev.detail.userInfo;
     if (userInfo) {
-      Taro.setStorageSync('userInfo', userInfo);
-      Taro.redirectTo({ url: '/pages/entry/index' });
-      addUserInfo({
+      const userId = await addUserInfo({
         nickName: userInfo.nickName,
         avatarUrl: userInfo.avatarUrl
       });
+      Taro.setStorageSync('userInfo', { ...userInfo, ...{ id: userId } });
+      Taro.navigateTo({ url: '/pages/entry/index' });
     }
   }
 
