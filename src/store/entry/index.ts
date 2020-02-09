@@ -17,10 +17,10 @@ export default class EntryStore {
     api() {
         return {
             createRoom: (query: ICreateOrFindRoomQuery): Promise<IResult> => {
-                return post(`/api/createRoom`, query);
+                return post(`/wechatapi/createRoom`, query);
             },
             findRoom: (query: ICreateOrFindRoomQuery): Promise<IResult> => {
-                return post(`/api/findRoom`, query);
+                return post(`/wechatapi/findRoom`, query);
             }
         };
     }

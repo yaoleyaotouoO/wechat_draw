@@ -13,7 +13,7 @@ export default class AuthStore {
     api() {
         return {
             addUserInfo: (query: IAddUserInfoQuery): Promise<number> => {
-                return post(`/api/addUserInfo`, query);
+                return post(`/wechatapi/addUserInfo`, query);
             }
         };
     }

@@ -140,22 +140,42 @@ export default class Game extends Component<IGameProps, IGameState> {
             message: '游戏马上开始！',
             type: 'success'
           });
-          this.setState({ inTheGame: true });
+          let { userList: stateUserList = [] } = this.state;
+          stateUserList = stateUserList.map(item => {
+            return { ...item, ...{ score: 0 } };
+          })
+          this.setState({
+            inTheGame: true,
+            userList: stateUserList
+          });
           const { drawUserId } = messageData;
           if (drawUserId === this.userInfo.id) {
             this.setState({ canDraw: true });
           }
           break;
         case 'updateCanvas':
-          this.draw(messageData);
+          if (messageData.type === "changePenColor") {
+            this.setPenColor(messageData.data);
+          } else if (messageData.type === "changePenWidth") {
+            this.setPenWidth(messageData.data);
+          } else {
+            this.draw(messageData);
+          }
           break;
         case 'updateMessage':
+          const stateMessage = this.state.messageList;
+          stateMessage.push(messageData.message);
           this.setState({
-            messageList: messageData
+            messageList: stateMessage
           });
           break;
         case 'updateGameInfo':
           const { roomData: { drawUserId: drawId, topicName, topicPrompt }, gameTime } = messageData;
+
+          // 新一轮游戏开始
+          if (gameTime === 100) {
+            this.clearCanvas();
+          }
 
           this.setState({
             gameTime,
@@ -169,6 +189,9 @@ export default class Game extends Component<IGameProps, IGameState> {
 
           this.clearCanvas();
           this.setState({
+            gameTime: null,
+            canDraw: false,
+            inTheGame: false,
             isOpenGameOver: true,
             userList
           });
@@ -253,6 +276,10 @@ export default class Game extends Component<IGameProps, IGameState> {
   clearCanvas = () => {
     this.ctx.clearRect(0, 0, 375, 603);
     this.ctx.draw();
+    this.setState({
+      penColor: penColorData.black,
+      penWidth: PenWidthType.Small,
+    });
   }
 
   draw = (data) => {
@@ -348,10 +375,10 @@ export default class Game extends Component<IGameProps, IGameState> {
       }
 
       if (canDraw) {
-        return topicName;
+        return topicName || '';
       }
 
-      return `${topicName.length}个字 ${gameTime < 70 && topicPrompt}`;
+      return `${topicName.length}个字 ${gameTime < 70 ? topicPrompt : ''}`;
     };
 
     return (
@@ -359,7 +386,8 @@ export default class Game extends Component<IGameProps, IGameState> {
         <AtMessage />
         <AtToast
           isOpened={isOpenTopicName}
-          hasMask
+          hasMask={false}
+          duration={2000}
           onClick={() => this.setState({ isOpenTopicName: false })}
           text={topicName}
         >
