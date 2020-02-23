@@ -12,7 +12,7 @@ export interface IUserInfo {
 }
 
 export interface IMessage {
-    id: number;
+    id: string;
     message: string;
     author: string;
 }

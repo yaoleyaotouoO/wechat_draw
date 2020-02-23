@@ -1,5 +1,5 @@
 import Taro, { Component, Config } from '@tarojs/taro';
-import { View, Text, Canvas, Input, Button } from '@tarojs/components';
+import { View, Text, Canvas, Input, Button, ScrollView } from '@tarojs/components';
 import { observer, inject } from '@tarojs/mobx';
 import { Store } from '@store/index';
 import GameStore from '@store/game';
@@ -125,6 +125,7 @@ export default class Game extends Component<IGameProps, IGameState> {
         case 'joinRoomFail':
           Taro.atMessage({
             message: messageData.errMsg,
+            duration: 2000,
             type: 'error'
           });
           setTimeout(() => {
@@ -136,10 +137,6 @@ export default class Game extends Component<IGameProps, IGameState> {
           break;
         case 'startGame':
           this.clearCanvas();
-          Taro.atMessage({
-            message: '游戏马上开始！',
-            type: 'success'
-          });
           let { userList: stateUserList = [] } = this.state;
           stateUserList = stateUserList.map(item => {
             return { ...item, ...{ score: 0 } };
@@ -164,9 +161,8 @@ export default class Game extends Component<IGameProps, IGameState> {
           break;
         case 'updateMessage':
           const stateMessage = this.state.messageList;
-          stateMessage.push(messageData.message);
           this.setState({
-            messageList: stateMessage
+            messageList: [messageData.message, ...stateMessage]
           });
           break;
         case 'updateGameInfo':
@@ -194,15 +190,6 @@ export default class Game extends Component<IGameProps, IGameState> {
             inTheGame: false,
             isOpenGameOver: true,
             userList
-          });
-          break;
-        case 'showAnswer':
-          const { topicName: answerTopicName } = messageData;
-
-          this.clearCanvas();
-          this.setState({
-            topicName: answerTopicName,
-            isOpenTopicName: true
           });
           break;
         default:
@@ -245,6 +232,7 @@ export default class Game extends Component<IGameProps, IGameState> {
     if (userList.length < 2) {
       Taro.atMessage({
         message: '游戏人数需大于等于2人！',
+        duration: 2000,
         type: 'error'
       });
 
@@ -505,15 +493,18 @@ export default class Game extends Component<IGameProps, IGameState> {
               }
             </View>
             <View className='at-col at-col-8 game-bottom-mid'>
-              <View className='body'>
+              <ScrollView className='body' scrollY>
                 {
                   messageList.map(item => {
-                    return <View className='body-message' key={item.id}>
+                    return <View
+                      className='body-message'
+                      key={item.id}
+                    >
                       <Text>{item.author}: {item.message}</Text>
                     </View>;
                   })
                 }
-              </View>
+              </ScrollView>
             </View>
             <View className='at-col at-col-2 game-bottom-right'>
               {
@@ -537,7 +528,7 @@ export default class Game extends Component<IGameProps, IGameState> {
             className={`${canDraw ? 'readOnly' : ''}`}
             disabled={canDraw}
             style={{ height: '100%' }}
-            placeholder={`${canDraw ? '画图者不能作答' : '输入您的答案'}`}
+            placeholder={`${canDraw ? '画图者不能作答' : '请输入。。。'}`}
             value={answer}
             onConfirm={e => this.handlerConfirmAnswer(e.detail.value)}
             onInput={e => this.setState({ answer: e.detail.value })}

@@ -6,7 +6,7 @@ const config = {
         Socket: 'ws://192.168.2.132:3500/ws/'
     },
     LIVE: {
-        Url: 'https://wx.yaoleyaotou.xin:3500',
+        Url: 'https://wx.yaoleyaotou.xin',
         Socket: 'wss://wx.yaoleyaotou.xin/ws/'
     }
 };
