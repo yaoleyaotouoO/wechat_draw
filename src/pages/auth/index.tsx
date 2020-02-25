@@ -53,8 +53,13 @@ export default class Auth extends Component<IAuthProps, IAuthState> {
             size='normal'
             onClick={() => this.setState({ isOpened: true })}
           >
-            授权
+            登陆
           </AtButton>
+          <View className="auth-hint">
+            <View>登陆成功之后仅使用您的昵称和头像, 用于:</View>
+            <View>1. 游戏中聊天功能</View>
+            <View>2. 统计分数</View>
+          </View>
         </View>
         <AtModal isOpened={isOpened}>
           <AtModalHeader>授权</AtModalHeader>
